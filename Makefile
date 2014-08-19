@@ -78,6 +78,7 @@ all: $(DEFAULT)
 
 help:
 	$(Q)echo "--- rust-empty (0.7 002)"
+	$(Q)echo "make z80 			     - Creates the C libz80 static library"
 	$(Q)echo "make run               - Runs executable"
 	$(Q)echo "make exe               - Builds main executable"
 	$(Q)echo "make lib               - Both static and dynamic library"
@@ -253,12 +254,16 @@ bench-external: test-external
 bench-internal: test-internal
 	$(Q)$(EXE_DIR)/test-internal --bench
 
-lib: rlib dylib
+z80: $(TARGET_LIB_DIR)
+	cd libz80 && $(MAKE) libz80.a && mv libz80.a ../$(TARGET_LIB_DIR) && $(MAKE) clean
+
+lib: rlib
 	$(Q)echo "--- Type 'make test' to test library"
 
 rlib: $(RLIB)
 
 $(RLIB): $(SOURCE_FILES) | $(LIB_ENTRY_FILE) $(TARGET_LIB_DIR)
+	cd libz80 && $(MAKE) libz80.a && mv libz80.a ../$(TARGET_LIB_DIR) && $(MAKE) clean
 	$(Q)$(COMPILER) --target "$(TARGET)" $(COMPILER_FLAGS) --crate-type=rlib $(LIB_ENTRY_FILE) -L "$(TARGET_LIB_DIR)" --out-dir "target" \
 	&& echo "--- Built rlib"
 

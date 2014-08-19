@@ -3,7 +3,8 @@
 name = "libz80-rs"
 version = "0.0.1"
 authors = ["github.com/seemk"]
+build = "make z80"
 
-[[lib]]
+[lib]
 
 name = "z80"
