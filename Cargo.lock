@@ -1,4 +1,12 @@
 [root]
 name = "libz80-rs"
 version = "0.0.1"
+dependencies = [
+ "libc 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "libc"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 

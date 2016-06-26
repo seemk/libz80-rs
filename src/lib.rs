@@ -1,7 +1,5 @@
 #![crate_name = "z80"]
 #![crate_type = "rlib"]
-#![feature(globs)]
-#![feature(macro_rules)]
 
 extern crate libc;
 
@@ -38,7 +36,7 @@ pub struct WordRegisters {
 
 #[repr(C)]
 pub struct Registers {
-    pub data: [u16, ..7u],
+    pub data: [u16; 7],
 }
 
 impl Registers {
@@ -91,26 +89,26 @@ macro_rules! reg_access(
             }
         }
     );
-)
+);
 
-reg_access!(set_AF1, get_AF1, AF, R1, u16)
-reg_access!(set_BC1, get_BC1, BC, R1, u16)
-reg_access!(set_DE1, get_DE1, DE, R1, u16)
-reg_access!(set_HL1, get_HL1, HL, R1, u16)
-reg_access!(set_AF2, get_AF2, AF, R2, u16)
-reg_access!(set_BC2, get_BC2, BC, R2, u16)
-reg_access!(set_DE2, get_DE2, DE, R2, u16)
-reg_access!(set_HL2, get_HL2, HL, R2, u16)
-reg_access!(set_IY,  get_IY,  IY, R1, u16)
-reg_access!(set_IX,  get_IX,  IX, R1, u16)
-reg_access!(set_SP,  get_SP,  SP, R1, u16)
+reg_access!(set_AF1, get_AF1, AF, R1, u16);
+reg_access!(set_BC1, get_BC1, BC, R1, u16);
+reg_access!(set_DE1, get_DE1, DE, R1, u16);
+reg_access!(set_HL1, get_HL1, HL, R1, u16);
+reg_access!(set_AF2, get_AF2, AF, R2, u16);
+reg_access!(set_BC2, get_BC2, BC, R2, u16);
+reg_access!(set_DE2, get_DE2, DE, R2, u16);
+reg_access!(set_HL2, get_HL2, HL, R2, u16);
+reg_access!(set_IY,  get_IY,  IY, R1, u16);
+reg_access!(set_IX,  get_IX,  IX, R1, u16);
+reg_access!(set_SP,  get_SP,  SP, R1, u16);
 
 impl Context {
 
     pub fn new() -> Context {
         let z80_context = Context {
-            R1: Registers { data: [0, ..7u] },
-            R2: Registers { data: [0, ..7u] },
+            R1: Registers { data: [0; 7] },
+            R2: Registers { data: [0; 7] },
             PC: 0, R: 0, I: 0, 
             IFF1: 0, IFF2: 0, IM: 0,
             mem_read: None, mem_write: None,
@@ -121,7 +119,7 @@ impl Context {
             nmi_req: 0, int_req: 0,
             defer_int: 0, int_vector: 0,
             exec_int_vector: 0,
-            user_data: std::ptr::mut_null()
+            user_data: std::ptr::null_mut()
         };
 
         unsafe { Z80RESET( transmute(&z80_context) ) };
@@ -171,7 +169,7 @@ impl Context {
 }
 
 
-#[link(name = "z80", kind = "static")]
+#[link(name = "z80")]
 extern "C" {
     fn Z80Execute(ctx: *mut Context);
     fn Z80ExecuteTStates(ctx: *mut Context, tstates: c_uint) ->
